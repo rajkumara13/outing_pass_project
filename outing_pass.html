@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VECT Outing Pass</title>
+    <!-- Link to the external stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container"> 
+        <h1>VECT MENS HOSTEL OUTING PASS</h1>
+        <!-- Outing submission form -->
+        <form id="outingForm" action="submit_outing.php" method="POST">
+            <table>
+                <tr>
+                    <td width="30%"><label for="studentName">Name:</label></td>
+                    <td><input name="studentName" id="studentName" placeholder="Enter your name" type="text" required></td>
+                </tr>
+                <tr>
+                    <td><label for="department">Department:</label></td>
+                    <td>
+                        <select name="department" id="department" required>
+                            <option value="">-- Select Department --</option>
+                            <option>Artificial Intelligence and Data Science</option>
+                            <option>Computer Science Engineering</option>
+                            <option>Artificial Intelligence and Machine Learning</option>
+                            <option>Biomedical Engineering</option>
+                            <option>Information Technology</option>
+                            <option>Mechanical Engineering</option>
+                            <option>Civil Engineering</option>
+                            <option>Electronics and Communication Engineering</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="year">Year:</label></td>
+                    <td>
+                        <select name="year" id="year" required>
+                            <option value="">-- Select Year --</option>
+                            <option>I-year</option>
+                            <option>II-year</option>
+                            <option>III-year</option>
+                            <option>IV-year</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="outingAttendanceNo">Attendance No:</label></td> 
+                    <td><input name="attendanceNo" id="outingAttendanceNo" placeholder="Enter your Attendance No" type="number" required></td>
+                </tr>
+                <tr>
+                    <td><label for="roomNo">Room No:</label></td>
+                    <td><input name="roomNo" id="roomNo" placeholder="Enter your Room no" type="number" required></td>
+                </tr>
+                <tr>
+                    <td><label for="purpose">Purpose of Outing:</label></td>
+                    <td>
+                        <select name="purpose" id="purpose" required>
+                            <option value="">-- Select Purpose --</option>
+                            <option>Medical</option>
+                            <option>Personal</option>
+                            <option>Shopping</option>
+                            <option>College Work</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="outingTime">Outing Time:</label></td> 
+                    <td><input name="outingTime" id="outingTime" type="datetime-local" required></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Submit Outing" title="Submit Outing">
+                        <input type="reset" value="Reset" title="Reset Form">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    
+    <!-- Arrival section, initially hidden -->
+    <div id="arrivalSection" class="form-container arrival-section">
+        <h3>Update Arrival Time</h3>
+        <!-- Arrival submission form -->
+        <form id="arrivalForm" action="update_arrival.php" method="POST">
+            <table>
+                <tr>
+                    <td><label for="arrivalAttendanceNo">Attendance No:</label></td> 
+                    <td>
+                        <input name="attendanceNo" id="arrivalAttendanceNo" type="number" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="arrivalTime">Arrival Time:</label></td>
+                    <td><input name="arrivalTime" id="arrivalTime" type="datetime-local" required></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Submit Arrival" title="Submit Arrival">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById('outingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('submit_outing.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data.includes("New record created successfully")) {
+                    const attendanceNo = document.getElementById('outingAttendanceNo').value;
+                    document.getElementById('arrivalAttendanceNo').value = attendanceNo;
+                    document.getElementById('arrivalSection').style.display = 'block';
+                    alert(data);
+                } else {
+                    alert("Error submitting form: " + data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+        
+        document.getElementById('arrivalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('update_arrival.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
